@@ -1,9 +1,7 @@
 <script lang="ts">
 import { input } from '@angular/core';
 
-defineMetadata({
-	host: { '[style.display]': "'block'" },
-});
+defineMetadata({ host: { '[style.display]': "'block'" } });
 
 const innerClass = input('');
 </script>

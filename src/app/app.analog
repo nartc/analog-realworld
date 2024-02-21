@@ -6,6 +6,10 @@ import { AuthStore } from './shared-data-access-auth/auth.store';
 defineMetadata({ imports: [RouterOutlet] });
 
 const authStore = inject(AuthStore);
+
+onInit(() => {
+	authStore.authenticate(void 0);
+});
 </script>
 
 <template>

@@ -2,9 +2,7 @@
 import { input } from '@angular/core';
 import type { FormErrors } from '../shared-data-access-form-errors/form-errors.store';
 
-defineMetadata({
-	host: { '[style.display]': "'contents'" },
-});
+defineMetadata({ host: { '[style.display]': "'contents'" } });
 
 const errors = input<FormErrors>({ hasError: false, errors: [] });
 </script>
