@@ -1,0 +1,13 @@
+<script lang="ts">
+import { RouterOutlet } from '@angular/router';
+import LayoutFooter from '../ui-layout/layout-footer.analog';
+import LayoutHeader from '../ui-layout/layout-header.analog';
+
+defineMetadata({ imports: [RouterOutlet] });
+</script>
+
+<template>
+	<LayoutHeader [isAuthenticated]="false" [username]="''" />
+	<router-outlet />
+	<LayoutFooter />
+</template>
