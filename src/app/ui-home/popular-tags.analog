@@ -1,0 +1,27 @@
+<script lang="ts">
+import { EventEmitter, input } from '@angular/core';
+import { ApiStatus } from '../shared-data-access-models/api-status';
+
+defineMetadata({
+	host: { class: 'block sidebar' },
+});
+
+const status = input.required<ApiStatus>();
+const tags = input<string[]>([]);
+
+const selectTag = new EventEmitter<string>();
+</script>
+
+<template>
+	<p>Popular Tags</p>
+
+	<div class="tag-list">
+		@if (status() !== 'loading') { @if (tags().length) { @for (tag of tags(); track tag) {
+		<a class="tag-pill tag-default" (click)="selectTag.emit(tag)">
+			{{ tag }}
+		</a>
+		} } @else { No tags } } @else {
+		<ng-content />
+		}
+	</div>
+</template>

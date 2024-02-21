@@ -1,0 +1,40 @@
+<script lang="ts">
+import { EventEmitter, input } from '@angular/core';
+import { FeedType } from '../shared-data-access-models/feed-type';
+
+defineMetadata({
+	host: { class: 'block feed-toggle' },
+});
+
+const selectedTag = input<string>();
+const feedType = input<FeedType>('global');
+const isFeedDisabled = input(true);
+
+const selectGlobal = new EventEmitter();
+const selectFeed = new EventEmitter();
+</script>
+
+<template>
+	<ul class="nav nav-pills outline-active">
+		<li class="nav-item">
+			<a
+				class="nav-link"
+				[class.disabled]="isFeedDisabled()"
+				[class.active]="feedType() === 'feed' && !selectedTag()"
+				(click)="!isFeedDisabled() && selectFeed.emit()"
+			>
+				Your Feed
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" [class.active]="feedType() === 'global' && !selectedTag()" (click)="selectGlobal.emit()">
+				Global Feed
+			</a>
+		</li>
+		@if (selectedTag()) {
+		<li class="nav-item">
+			<a class="nav-link active">#{{ selectedTag() }}</a>
+		</li>
+		}
+	</ul>
+</template>
