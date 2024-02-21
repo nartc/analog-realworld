@@ -1,6 +1,11 @@
 <script lang="ts">
+import { inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthStore } from './shared-data-access-auth/auth.store';
+
 defineMetadata({ imports: [RouterOutlet] });
+
+const authStore = inject(AuthStore);
 </script>
 
 <template>

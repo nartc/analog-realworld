@@ -1,0 +1,19 @@
+<script lang="ts">
+import { input } from '@angular/core';
+
+defineMetadata({
+	host: { '[style.display]': "'block'" },
+});
+
+const innerClass = input('');
+</script>
+
+<template>
+	<div class="container page">
+		<div class="row">
+			<div [class]="innerClass()">
+				<ng-content />
+			</div>
+		</div>
+	</div>
+</template>

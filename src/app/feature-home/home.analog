@@ -1,5 +1,8 @@
 <script lang="ts">
 import HomeBanner from '../ui-home/home-banner.analog';
+// import { HomeStore } from './home.store';
+//
+// console.log(HomeStore);
 </script>
 
 <template>

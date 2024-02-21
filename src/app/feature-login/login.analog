@@ -1,0 +1,61 @@
+<script lang="ts">
+import { inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { LoginUser } from '../shared-data-access-api';
+import { FormErrorsStore } from '../shared-data-access-form-errors/form-errors.store';
+import FormErrors from '../shared-ui/form-errors.analog';
+import FormLayout from '../shared-ui/form-layout.analog';
+import { LoginStore } from './login.store';
+
+defineMetadata({
+	imports: [RouterLink, FormsModule],
+	providers: [LoginStore, FormErrorsStore],
+});
+
+const loginStore = inject(LoginStore);
+
+const loginUser: LoginUser = { email: '', password: '' };
+</script>
+
+<template>
+	<FormLayout class="auth-page" innerClass="col-md-6 offset-md-3 col-xs-12">
+		<h1 class="text-xs-center">Sign in</h1>
+		<p class="text-xs-center">
+			<a routerLink="/register">Need an account?</a>
+		</p>
+
+		<FormErrors [errors]="loginStore.errors()" />
+
+		<form #form="ngForm" (ngSubmit)="loginStore.login(loginUser)">
+			<fieldset class="form-group">
+				<input
+					[(ngModel)]="loginUser.email"
+					class="form-control form-control-lg"
+					type="text"
+					placeholder="Email"
+					name="email"
+					required
+					email
+				/>
+			</fieldset>
+			<fieldset class="form-group">
+				<input
+					[(ngModel)]="loginUser.password"
+					class="form-control form-control-lg"
+					type="password"
+					placeholder="Password"
+					name="password"
+					password
+				/>
+			</fieldset>
+			<button
+				type="submit"
+				class="btn btn-lg btn-primary pull-xs-right"
+				[disabled]="!form.valid || loginStore.isLoading()"
+			>
+				Sign in
+			</button>
+		</form>
+	</FormLayout>
+</template>
