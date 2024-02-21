@@ -1,38 +1,61 @@
 {
-  "name": "analog-realworld",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "^17.2.0",
-    "@angular/common": "^17.2.0",
-    "@angular/compiler": "^17.2.0",
-    "@angular/core": "^17.2.0",
-    "@angular/forms": "^17.2.0",
-    "@angular/platform-browser": "^17.2.0",
-    "@angular/platform-browser-dynamic": "^17.2.0",
-    "@angular/router": "^17.2.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.14.3"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^17.2.0",
-    "@angular/cli": "^17.2.0",
-    "@angular/compiler-cli": "^17.2.0",
-    "@types/jasmine": "~5.1.0",
-    "jasmine-core": "~5.1.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.3.2"
-  }
+	"name": "analog-realworld",
+	"version": "0.0.0",
+	"scripts": {
+		"ng": "ng",
+		"start": "ng serve",
+		"build": "ng build",
+		"openapi": "ng-openapi-gen"
+	},
+	"private": true,
+	"dependencies": {
+		"@angular/animations": "^17.2.0",
+		"@angular/common": "^17.2.0",
+		"@angular/compiler": "^17.2.0",
+		"@angular/core": "^17.2.0",
+		"@angular/forms": "^17.2.0",
+		"@angular/platform-browser": "^17.2.0",
+		"@angular/platform-browser-dynamic": "^17.2.0",
+		"@angular/router": "^17.2.0",
+		"rxjs": "~7.8.0",
+		"tslib": "^2.3.0",
+		"zone.js": "~0.14.3"
+	},
+	"devDependencies": {
+		"@analogjs/vite-plugin-angular": "^0.2.38",
+		"@angular-builders/custom-esbuild": "^17.1.0",
+		"@angular-devkit/build-angular": "^17.2.0",
+		"@angular/cli": "^17.2.0",
+		"@angular/compiler-cli": "^17.2.0",
+		"@nx/devkit": "^18.0.4",
+		"@types/jasmine": "~5.1.0",
+		"jasmine-core": "~5.1.0",
+		"karma": "~6.4.0",
+		"karma-chrome-launcher": "~3.2.0",
+		"karma-coverage": "~2.2.0",
+		"karma-jasmine": "~5.1.0",
+		"karma-jasmine-html-reporter": "~2.1.0",
+		"ng-openapi-gen": "^0.51.0",
+		"nx": "^18.0.4",
+		"prettier": "^3.2.5",
+		"prettier-plugin-organize-imports": "^3.2.4",
+		"typescript": "~5.3.2"
+	},
+	"prettier": {
+		"htmlWhitespaceSensitivity": "ignore",
+		"useTabs": true,
+		"singleQuote": true,
+		"printWidth": 120,
+		"plugins": [
+			"prettier-plugin-organize-imports"
+		],
+		"overrides": [
+			{
+				"files": "*.analog",
+				"options": {
+					"parser": "vue"
+				}
+			}
+		]
+	}
 }
