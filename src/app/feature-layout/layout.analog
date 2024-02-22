@@ -1,13 +1,17 @@
 <script lang="ts">
+import { inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthStore } from '../shared-data-access-auth/auth.store';
 import LayoutFooter from '../ui-layout/layout-footer.analog';
 import LayoutHeader from '../ui-layout/layout-header.analog';
 
 defineMetadata({ imports: [RouterOutlet] });
+
+const authStore = inject(AuthStore);
 </script>
 
 <template>
-	<LayoutHeader [isAuthenticated]="false" [username]="''" />
+	<LayoutHeader [isAuthenticated]="authStore.isAuthenticated()" [username]="authStore.username()" />
 	<router-outlet />
 	<LayoutFooter />
 </template>

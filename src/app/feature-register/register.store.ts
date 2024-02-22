@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { EMPTY, catchError, pipe, switchMap, tap } from 'rxjs';
+import { EMPTY, catchError, exhaustMap, pipe, tap } from 'rxjs';
 import { NewUser, UserAndAuthenticationApiClient } from '../shared-data-access-api';
 import { AuthStore } from '../shared-data-access-auth/auth.store';
 import { FormErrorsStore } from '../shared-data-access-form-errors/form-errors.store';
@@ -11,7 +11,7 @@ import { ApiStatus } from '../shared-data-access-models/api-status';
 export const RegisterStore = signalStore(
 	withState({ status: 'idle' as ApiStatus }),
 	withComputed((store) => {
-		const [formErrorsStore] = [inject(FormErrorsStore)];
+		const formErrorsStore = inject(FormErrorsStore);
 		return { isLoading: computed(() => store.status() === 'loading'), errors: computed(formErrorsStore.formErrors) };
 	}),
 	withMethods((store) => {
@@ -24,7 +24,7 @@ export const RegisterStore = signalStore(
 			register: rxMethod<NewUser>(
 				pipe(
 					tap(() => patchState(store, { status: 'loading' })),
-					switchMap((user) =>
+					exhaustMap((user) =>
 						userAndAuthenticationApiClient.createUser({ body: { user } }).pipe(
 							tap(({ user }) => {
 								patchState(store, { status: 'success' });

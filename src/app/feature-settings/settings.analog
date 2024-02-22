@@ -1,0 +1,100 @@
+<script lang="ts">
+import { inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { UpdateUser } from '../shared-data-access-api';
+import { SettingsStore } from './settings.store';
+
+defineMetadata({
+	host: { class: 'block settings-page' },
+	imports: [FormsModule],
+	providers: [SettingsStore],
+});
+
+const settingsStore = inject(SettingsStore);
+const updateUser = signal<UpdateUser>(settingsStore.user() || {});
+
+function updateUserData<TKey extends keyof UpdateUser>(key: TKey, data: UpdateUser[TKey]) {
+	updateUser.update((prev) => ({ ...prev, [key]: data }));
+}
+</script>
+
+<template>
+	<div class="container page">
+		<div class="row">
+			<div class="col-md-6 offset-md-3 col-xs-12">
+				<h1 class="text-xs-center">Your Settings</h1>
+
+				<form #form="ngForm" (ngSubmit)="settingsStore.updateUser(updateUser())">
+					<fieldset>
+						<fieldset class="form-group">
+							<input
+								[ngModel]="updateUser().image"
+								(ngModelChange)="updateUserData('image', $event)"
+								class="form-control"
+								type="text"
+								placeholder="URL of profile picture"
+								name="image"
+							/>
+						</fieldset>
+						<fieldset class="form-group">
+							<input
+								class="form-control form-control-lg"
+								type="text"
+								placeholder="Your Username"
+								name="username"
+								[ngModel]="updateUser().username"
+								(ngModelChange)="updateUserData('username', $event)"
+								required
+							/>
+						</fieldset>
+						<fieldset class="form-group">
+							<textarea
+								class="form-control form-control-lg"
+								rows="8"
+								placeholder="Short bio about you"
+								name="bio"
+								[ngModel]="updateUser().bio"
+								(ngModelChange)="updateUserData('bio', $event)"
+							></textarea>
+						</fieldset>
+						<fieldset class="form-group">
+							<input
+								class="form-control form-control-lg"
+								type="text"
+								placeholder="Email"
+								name="email"
+								[ngModel]="updateUser().email"
+								(ngModelChange)="updateUserData('email', $event)"
+								required
+								email
+							/>
+						</fieldset>
+						<fieldset class="form-group">
+							<input
+								class="form-control form-control-lg"
+								type="password"
+								placeholder="Password"
+								name="password"
+								[ngModel]="updateUser().password"
+								(ngModelChange)="updateUserData('password', $event)"
+							/>
+						</fieldset>
+						<button
+							type="submit"
+							class="btn btn-lg btn-primary pull-xs-right"
+							[disabled]="form.invalid || settingsStore.isLoading()"
+						>
+							Update Settings
+						</button>
+					</fieldset>
+				</form>
+
+				<hr />
+
+				<button class="btn btn-outline-danger" type="button" (click)="settingsStore.logout()">
+					Or click here to logout.
+				</button>
+			</div>
+		</div>
+	</div>
+</template>

@@ -1,0 +1,18 @@
+<script lang="ts">
+import { inject } from '@angular/core';
+import ArticleForm from '../../shared-ui/article-form.analog';
+import FormLayout from '../../shared-ui/form-layout.analog';
+import { NewArticleStore } from './new-article.store';
+
+defineMetadata({
+	providers: [NewArticleStore],
+});
+
+const newArticleStore = inject(NewArticleStore);
+</script>
+
+<template>
+	<FormLayout class="editor-page" innerClass="col-md-10 offset-md-1 col-xs-12">
+		<ArticleForm (submitArticle)="newArticleStore.createArticle($event)" />
+	</FormLayout>
+</template>

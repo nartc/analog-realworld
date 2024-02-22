@@ -1,0 +1,20 @@
+<script lang="ts">
+import { EventEmitter, input } from '@angular/core';
+import { Article } from '../shared-data-access-api';
+import { ApiStatus } from '../shared-data-access-models/api-status';
+import ArticlePreview from './article-preview.analog';
+
+const status = input.required<ApiStatus>();
+const articles = input<Article[]>([]);
+const toggleFavorite = new EventEmitter<Article>();
+</script>
+
+<template>
+	@if (status() !== 'loading') { @if (articles().length) { @for (article of articles(); track article.slug) {
+	<ArticlePreview [article]="article" (toggleFavorite)="toggleFavorite.emit($event)" />
+	} } @else {
+	<ArticlePreview>No articles are here...yet</ArticlePreview>
+	} } @else {
+	<ArticlePreview>Loading articles...</ArticlePreview>
+	}
+</template>

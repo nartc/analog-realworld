@@ -1,0 +1,38 @@
+<script lang="ts">
+import { EventEmitter, input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+defineMetadata({
+	imports: [FormsModule],
+});
+
+const currentUserImage = input.required<string>();
+const comment = new EventEmitter<string>();
+
+const newComment = signal('');
+
+function submit() {
+	comment.emit(newComment());
+	newComment.set('');
+}
+</script>
+
+<template>
+	<form #form="ngForm" class="card comment-form" (ngSubmit)="submit()">
+		<div class="card-block">
+			<textarea
+				class="form-control"
+				placeholder="Write a comment..."
+				rows="3"
+				name="comment"
+				[ngModel]="newComment()"
+				(ngModelChange)="newComment.set($event)"
+				required
+			></textarea>
+		</div>
+		<div class="card-footer">
+			<img [src]="currentUserImage()" alt="Avatar of current user" class="comment-author-img" />
+			<button type="submit" class="btn btn-sm btn-primary" [disabled]="form.invalid">Post Comment</button>
+		</div>
+	</form>
+</template>

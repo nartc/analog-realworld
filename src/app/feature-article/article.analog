@@ -1,0 +1,77 @@
+<script lang="ts">
+import { inject, input } from '@angular/core';
+import ArticleMeta from '../ui-article/article-meta.analog';
+import CommentForm from '../ui-article/comment-form.analog';
+import CommentItem from '../ui-article/comment-item.analog';
+import { ArticleStore } from './article.store';
+
+defineMetadata({
+	host: { class: 'block article-page' },
+	providers: [ArticleStore],
+});
+
+const articleStore = inject(ArticleStore);
+
+const slug = input<string>('');
+
+articleStore.getArticle(slug);
+</script>
+<template>
+	@if (!articleStore.isLoading()) { @if (articleStore.sanitizedArticle(); as article) {
+	<div class="banner">
+		<div class="container">
+			<h1>{{ article.title }}</h1>
+			<ArticleMeta
+				[article]="article"
+				[isOwner]="articleStore.isOwner()"
+				(toggleFavorite)="articleStore.toggleFavorite(article)"
+				(deleteArticle)="articleStore.deleteArticle(article.slug)"
+				(followAuthor)="articleStore.toggleFollowAuthor($event)"
+			/>
+		</div>
+	</div>
+
+	<div class="container page">
+		<div class="row article-content">
+			<div class="col-md-12">
+				<div class="body" [innerHTML]="article.body"></div>
+				@if (article.tagList.length) {
+				<ul class="tag-list">
+					@for (tag of article.tagList; track tag) {
+					<li class="tag-default tag-pill tag-outline ng-binding ng-scope">
+						{{ tag }}
+					</li>
+					}
+				</ul>
+				}
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="article-actions">
+			<ArticleMeta
+				[article]="article"
+				[isOwner]="articleStore.isOwner()"
+				(toggleFavorite)="articleStore.toggleFavorite(article)"
+				(deleteArticle)="articleStore.deleteArticle(article.slug)"
+				(followAuthor)="articleStore.toggleFollowAuthor($event)"
+			/>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-8 offset-md-2">
+				<CommentForm
+					[currentUserImage]="articleStore.currentUserImage()"
+					(comment)="articleStore.createComment($event)"
+				/>
+				@for (comment of articleStore.commentsWithOwner();track comment) {
+				<CommentItem [comment]="comment" (deleteComment)="articleStore.deleteComment(comment.id)" />
+				}
+			</div>
+		</div>
+	</div>
+	} } @else {
+	<p>Loading article...</p>
+	}
+</template>

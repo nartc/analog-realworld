@@ -1,0 +1,115 @@
+<script lang="ts">
+import { effect, EventEmitter, input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Article } from '../shared-data-access-api';
+
+defineMetadata({
+	imports: [FormsModule],
+});
+
+export interface ArticleFormData {
+	title: string;
+	body: string;
+	description: string;
+	tagList: string[];
+}
+
+const existingArticle = input<Article>();
+const submitArticle = new EventEmitter<ArticleFormData>();
+
+const formData = signal<ArticleFormData>({
+	title: '',
+	description: '',
+	body: '',
+	tagList: [],
+});
+
+effect(
+	() => {
+		const existing = existingArticle();
+		if (existing) {
+			formData.set({
+				title: existing.title,
+				description: existing.description,
+				body: existing.body,
+				tagList: existing.tagList,
+			});
+		}
+	},
+	{ allowSignalWrites: true },
+);
+
+function addTag(tagInput: HTMLInputElement) {
+	const trimmed = tagInput.value?.trim();
+	if (!trimmed) return;
+
+	formData.update((data) => ({ ...data, tagList: [...data.tagList, trimmed] }));
+	tagInput.value = '';
+}
+
+function removeTag(tagToRemove: string) {
+	formData.update((data) => ({ ...data, tagList: data.tagList.filter((tag) => tag !== tagToRemove) }));
+}
+
+function updateFormData<TKey extends keyof ArticleFormData>(key: TKey, data: ArticleFormData[TKey]) {
+	formData.update((prev) => ({ ...prev, [key]: data }));
+}
+</script>
+
+<template>
+	<form #form="ngForm">
+		<fieldset>
+			<fieldset class="form-group">
+				<input
+					type="text"
+					class="form-control form-control-lg"
+					placeholder="Article Title"
+					name="title"
+					[ngModel]="formData().title"
+					(ngModelChange)="updateFormData('title', $event)"
+				/>
+			</fieldset>
+			<fieldset class="form-group">
+				<input
+					type="text"
+					class="form-control"
+					placeholder="What's this article about?"
+					name="description"
+					[ngModel]="formData().description"
+					(ngModelChange)="updateFormData('description', $event)"
+				/>
+			</fieldset>
+			<fieldset class="form-group">
+				<textarea
+					class="form-control"
+					rows="8"
+					placeholder="Write your article (in markdown)"
+					name="body"
+					[ngModel]="formData().body"
+					(ngModelChange)="updateFormData('body', $event)"
+				></textarea>
+			</fieldset>
+			<fieldset class="form-group">
+				<input #tagInput type="text" class="form-control" placeholder="Enter tags" (keydown.enter)="addTag(tagInput)" />
+				@if (formData().tagList?.length) {
+				<div class="tag-list">
+					@for (tag of formData().tagList; track tag) {
+					<span class="tag-pill tag-default">
+						<i class="ion-close-round" (click)="removeTag(tag)"></i>
+						{{ ' ' + tag }}
+					</span>
+					}
+				</div>
+				}
+			</fieldset>
+			<button
+				class="btn btn-lg pull-xs-right btn-primary"
+				type="button"
+				[disabled]="form.invalid"
+				(click)="submitArticle.emit(formData())"
+			>
+				Publish Article
+			</button>
+		</fieldset>
+	</form>
+</template>

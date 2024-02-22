@@ -1,0 +1,44 @@
+<script lang="ts">
+import { effect, inject, input } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { RouterOutlet } from '@angular/router';
+import ArticlesToggle from '../ui-profile/articles-toggle.analog';
+import UserInfo from '../ui-profile/user-info.analog';
+import { ProfileStore } from './profile.store';
+
+defineMetadata({
+	host: { class: 'block profile-page' },
+	imports: [RouterOutlet],
+	providers: [ProfileStore],
+});
+
+const [profileStore, title] = [inject(ProfileStore), inject(Title)];
+const username = input('');
+
+effect(() => {
+	if (username()) {
+		profileStore.getProfile(username());
+		title.setTitle(username() + ' Author Profile');
+	}
+});
+</script>
+
+<template>
+	@if (profileStore.isLoading()) { @if (profileStore.profile(); as profile) {
+	<UserInfo
+		[profile]="profile"
+		[isOwner]="profileStore.isOwner()"
+		(toggleFollow)="profileStore.toggleFollow(profile)"
+	/>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-10 offset-md-1">
+				<ArticlesToggle [username]="profile.username" />
+				<router-outlet />
+			</div>
+		</div>
+	</div>
+	} } @else {
+	<p>Loading profile...</p>
+	}
+</template>

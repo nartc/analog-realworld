@@ -2,6 +2,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { ApiConfiguration } from './shared-data-access-api';
+import { authInterceptor } from './shared-data-access-auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -16,6 +17,6 @@ export const appConfig: ApplicationConfig = {
 			],
 			withComponentInputBinding(),
 		),
-		provideHttpClient(withFetch(), withInterceptors([])),
+		provideHttpClient(withFetch(), withInterceptors([authInterceptor()])),
 	],
 };

@@ -1,0 +1,23 @@
+<script lang="ts">
+import { inject } from '@angular/core';
+import ArticleList from '../shared-ui/article-list.analog';
+import { ProfileArticlesStore } from './profile-articles.store';
+
+defineMetadata({
+	providers: [ProfileArticlesStore],
+});
+
+const profileArticlesStore = inject(ProfileArticlesStore);
+
+onInit(() => {
+	profileArticlesStore.getArticles(void 0);
+});
+</script>
+
+<template>
+	<ArticleList
+		[status]="profileArticlesStore.status()"
+		[articles]="profileArticlesStore.articles()"
+		(toggleFavorite)="profileArticlesStore.toggleFavorite($event)"
+	/>
+</template>

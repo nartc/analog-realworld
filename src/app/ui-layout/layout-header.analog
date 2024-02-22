@@ -46,11 +46,11 @@ const username = input('');
 				<li class="nav-item">
 					<a
 						class="nav-link"
-						[routerLink]="['/profile', username]"
+						[routerLink]="['/profile', username()]"
 						routerLinkActive="active"
 						[routerLinkActiveOptions]="{ exact: true }"
 					>
-						{{ username }}
+						{{ username() }}
 					</a>
 				</li>
 				} @else {

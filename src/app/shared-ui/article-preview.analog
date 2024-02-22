@@ -1,0 +1,55 @@
+<script lang="ts">
+import { DatePipe } from '@angular/common';
+import { EventEmitter, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { Article } from '../shared-data-access-api';
+
+defineMetadata({
+	host: { class: 'block article-preview' },
+	imports: [RouterLink, DatePipe],
+});
+
+const article = input<Article>();
+const toggleFavorite = new EventEmitter<Article>();
+</script>
+
+<template>
+	@if (article(); as article) {
+	<div class="article-meta">
+		<a [routerLink]="['/profile', article.author.username]">
+			<img [src]="article.author.image" alt="Avatar of article author" />
+		</a>
+		<div class="info">
+			<a [routerLink]="['/profile', article.author.username]" class="author">
+				{{ article.author.username }}
+			</a>
+			<span class="date">
+				{{ article.updatedAt | date : 'mediumDate' }}
+			</span>
+		</div>
+		<button
+			class="btn btn-sm pull-xs-right"
+			[class.btn-primary]="article.favorited"
+			[class.btn-outline-primary]="!article.favorited"
+			(click)="toggleFavorite.emit(article)"
+		>
+			<i class="ion-heart"></i>
+			{{ article.favoritesCount }}
+		</button>
+	</div>
+	<a [routerLink]="['/article', article.slug]" class="preview-link">
+		<h1>{{ article.title }}</h1>
+		<p>{{ article.description }}</p>
+		<span>Read more...</span>
+		@if (article.tagList.length > 0) {
+		<ul class="tag-list">
+			@for (tag of article.tagList; track tag) {
+			<li class="tag-default tag-pill tag-outline">
+				{{ tag }}
+			</li>
+			}
+		</ul>
+		}
+	</a>
+	} @else { No article }
+</template>
